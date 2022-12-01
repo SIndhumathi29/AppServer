@@ -1,0 +1,46 @@
+version: '3' 
+services: 
+  appserver: 
+    image: docker.io/indhumathis/appserver 
+    ports: 
+    - 8761 
+  
+  orderms: 
+    image: docker.io/indhumathis/orderms
+    environment: 
+    - eureka.client.service-url.defaultZone=http://appserver:8761/eureka/ 
+    - eureka.instance.prefer-ip-address=true 
+    - spring.datasource.url=jdbc:mysql://traindb.cw1xfxcnddzf.us-east-1.rds.amazonaws.com:3306/finalproject 
+    - spring.datasource.username=admin
+    - spring.datasource.password=rootroot 
+    ports: 
+    - 8084
+    depends_on: 
+    - appserver
+    
+  trainms: 
+    image: docker.io/indhumathis/trainms 
+    environment: 
+    - eureka.client.service-url.defaultZone=http://appserver:8761/eureka/ 
+    - eureka.instance.prefer-ip-address=true
+    - spring.datasource.url=jdbc:mysql://traindb.cw1xfxcnddzf.us-east-1.rds.amazonaws.com:3306/finalproject 
+    - spring.datasource.username=admin
+    - spring.datasource.password=rootroot  
+    ports: 
+    - 8082 
+    depends_on: 
+    - appserver 
+  token: 
+    image: docker.io/indhumathis/token 
+    environment: 
+    - eureka.client.service-url.defaultZone=http://appserver:8761/eureka/ 
+    - eureka.instance.prefer-ip-address=true
+    - spring.datasource.url=jdbc:mysql://traindb.cw1xfxcnddzf.us-east-1.rds.amazonaws.com:3306/finalproject 
+    - spring.datasource.username=admin
+    - spring.datasource.password=rootroot 
+    ports: 
+    - 8081
+    depends_on: 
+    - appserver 
+ 
+ 
